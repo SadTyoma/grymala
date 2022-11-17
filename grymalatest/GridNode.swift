@@ -69,7 +69,7 @@ class GridNode:SKSpriteNode {
         
         for i in -midRows...midRows {
             var pos = gridPosition(row: i + midRows, col: midCols)
-            let label = SKLabelNode(text: "\(-i)")
+            let label = SKLabelNode(text: "\(i)")
             label.fontSize = 15.0
             pos.x += label.frame.width / 2
             label.position = pos
@@ -79,7 +79,7 @@ class GridNode:SKSpriteNode {
     
     func gridPosition(row:Int, col:Int) -> CGPoint {
         let x = CGFloat(col) * blockSize - (blockSize * CGFloat(cols)) / 2.0
-        let y = CGFloat(rows - row - 1) * blockSize - (blockSize * CGFloat(rows)) / 2.0
-        return CGPoint(x:x, y:y)
+        let y = CGFloat(rows - row) * blockSize - (blockSize * CGFloat(rows)) / 2.0
+        return CGPoint(x:x, y:-y)
     }
 }

@@ -11,6 +11,7 @@ import GameplayKit
 class GridScene: SKScene {
     private let blockSize = 40.0
     private let rowsAndCols = 51
+    private let halfRAC = 25.0
     
     private var fingureIsOnNinja = false
     private var label : SKLabelNode?
@@ -23,6 +24,7 @@ class GridScene: SKScene {
             grid.position = CGPoint (x:frame.midX, y:frame.midY)
             addChild(grid)
         }
+        VectorsManager.shared.delegate = self
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -81,5 +83,20 @@ class GridScene: SKScene {
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
+    }
+}
+
+extension GridScene: VectorsManagerDelegate{
+    func vectorArrayChanged() {
+        let vec = VectorsManager.shared.vectorsAsNodes.last
+        let sp = vec?.startPoint
+        let ep = vec?.endPoint
+        let color = vec?.fillColor
+        
+        let newSP = grid?.gridPosition(row: Int(sp!.y + halfRAC), col: Int(sp!.x + halfRAC))
+        let newEP = grid?.gridPosition(row: Int(ep!.y + halfRAC), col: Int(ep!.x + halfRAC))
+        
+        let vector = VectorNode(arrowWithFillColor: color!, startPoint: newSP!, endPoint: newEP!)
+        grid!.addChild(vector)
     }
 }

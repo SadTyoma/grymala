@@ -37,6 +37,7 @@ class ContainerViewController: UIViewController {
         addChild(addVC)
         view.addSubview(addVC.view)
         addVC.didMove(toParent: self)
+        addVC.delegate = self
         
         gridVC.delegate = self
         let navVC = UINavigationController(rootViewController: gridVC)
@@ -57,6 +58,7 @@ extension ContainerViewController: GridViewControllerDelegate{
                 self.navVC?.view.frame.origin.x = 0
             }
         case .closed:
+            addVC.view.isHidden = true
             vectorsVCState = .opened
             UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0) {
                 self.navVC?.view.frame.origin.x = self.gridVC.view.frame.size.width / 3
@@ -72,12 +74,17 @@ extension ContainerViewController: GridViewControllerDelegate{
                 self.navVC?.view.frame.origin.x = 0
             }
         case .closed:
+            addVC.view.isHidden = false
             addVCState = .opened
             UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0) {
                 self.navVC?.view.frame.origin.x = -self.gridVC.view.frame.size.width * 2 / 3
             }
         }
     }
-    
-    
+}
+
+extension ContainerViewController: AddViewControllerDelegate{
+    func addButtontapped() {
+        addButtonDidTapped()
+    }
 }

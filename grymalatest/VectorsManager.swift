@@ -9,12 +9,21 @@ import Foundation
 import CoreData
 import UIKit
 
+protocol VectorsManagerDelegate{
+    func vectorArrayChanged()
+}
+
 class VectorsManager{
     public static let shared = VectorsManager()
+    public var delegate: VectorsManagerDelegate?
     private let context: NSManagedObjectContext?
     private let entity: NSEntityDescription?
     private var vectorsAsObjects: [NSManagedObject] = []
-    public var vectorsAsNodes: [VectorNode] = []
+    public var vectorsAsNodes: [VectorNode] = []{
+        didSet {
+            delegate?.vectorArrayChanged()
+        }
+    }
     
     private init(){
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
