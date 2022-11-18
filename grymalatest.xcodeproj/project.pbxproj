@@ -23,6 +23,8 @@
 		9A6840C22926138F0059D234 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6840C12926138F0059D234 /* ContainerViewController.swift */; };
 		9A6840C4292626E10059D234 /* VectorsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6840C3292626E10059D234 /* VectorsViewController.swift */; };
 		9A6840C6292626F30059D234 /* AddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6840C5292626F30059D234 /* AddViewController.swift */; };
+		9AECD2FB2926B56700B5B974 /* VectorTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AECD2F92926B56700B5B974 /* VectorTableViewCell.swift */; };
+		9AECD2FC2926B56700B5B974 /* VectorTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9AECD2FA2926B56700B5B974 /* VectorTableViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +46,8 @@
 		9A6840C12926138F0059D234 /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
 		9A6840C3292626E10059D234 /* VectorsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectorsViewController.swift; sourceTree = "<group>"; };
 		9A6840C5292626F30059D234 /* AddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddViewController.swift; sourceTree = "<group>"; };
+		9AECD2F92926B56700B5B974 /* VectorTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectorTableViewCell.swift; sourceTree = "<group>"; };
+		9AECD2FA2926B56700B5B974 /* VectorTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VectorTableViewCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +90,8 @@
 				9A6840BF292588350059D234 /* GridScene.swift */,
 				9A3F583E2926340900AA02A5 /* VectorNode.swift */,
 				9A3F583C29262F4500AA02A5 /* GridNode.swift */,
+				9AECD2F92926B56700B5B974 /* VectorTableViewCell.swift */,
+				9AECD2FA2926B56700B5B974 /* VectorTableViewCell.xib */,
 				9A6840AC292587690059D234 /* Main.storyboard */,
 				9A6840B22925876B0059D234 /* Assets.xcassets */,
 				9A6840B42925876B0059D234 /* LaunchScreen.storyboard */,
@@ -159,6 +165,7 @@
 				9A6840B62925876B0059D234 /* LaunchScreen.storyboard in Resources */,
 				9A6840B32925876B0059D234 /* Assets.xcassets in Resources */,
 				9A6840AE292587690059D234 /* Main.storyboard in Resources */,
+				9AECD2FC2926B56700B5B974 /* VectorTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -177,6 +184,7 @@
 				9A6840AB292587690059D234 /* GridViewController.swift in Sources */,
 				9A6840B1292587690059D234 /* Vectors.xcdatamodeld in Sources */,
 				9A3F583F2926340900AA02A5 /* VectorNode.swift in Sources */,
+				9AECD2FB2926B56700B5B974 /* VectorTableViewCell.swift in Sources */,
 				9A6840A7292587690059D234 /* AppDelegate.swift in Sources */,
 				9A6840C22926138F0059D234 /* ContainerViewController.swift in Sources */,
 				9A6840A9292587690059D234 /* SceneDelegate.swift in Sources */,
