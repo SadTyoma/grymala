@@ -17,6 +17,7 @@ class GridScene: SKScene {
     private var label : SKLabelNode?
     private var spinnyNode : SKShapeNode?
     private var grid: GridNode?
+    private var arrLength = 0
     
     override func didMove(to: SKView) {
         grid = GridNode(blockSize: blockSize, rows:rowsAndCols, cols:rowsAndCols)
@@ -24,7 +25,7 @@ class GridScene: SKScene {
             grid.position = CGPoint (x:frame.midX, y:frame.midY)
             addChild(grid)
         }
-        VectorsManager.shared.delegate = self
+        VectorsManager.shared.multicastVectorsManagerDelegate.add(delegate: self)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -88,15 +89,36 @@ class GridScene: SKScene {
 
 extension GridScene: VectorsManagerDelegate{
     func vectorArrayChanged() {
-        let vec = VectorsManager.shared.vectorsAsNodes.last
-        let sp = vec?.startPoint
-        let ep = vec?.endPoint
-        let color = vec?.fillColor
+        let vectorsAsNodes = VectorsManager.shared.vectorsAsNodes
+        let arrayLength = vectorsAsNodes.count
+        if arrayLength > arrLength{
+            let vec = vectorsAsNodes.last
+            let sp = vec?.startPoint
+            let ep = vec?.endPoint
+            let color = vec?.fillColor
+            
+            let newSP = grid?.gridPosition(row: Int(sp!.y + halfRAC), col: Int(sp!.x + halfRAC))
+            let newEP = grid?.gridPosition(row: Int(ep!.y + halfRAC), col: Int(ep!.x + halfRAC))
+            
+            let vector = VectorNode(fillColor: color!, startPoint: newSP!, endPoint: newEP!)
+            grid!.addChild(vector)
+        }else{
+            let children = grid!.children.filter({ node in
+                return node is VectorNode
+            }) as! [VectorNode]
+            
+            let filtredChildren = children.filter { child in
+                for vec in vectorsAsNodes{
+                    return !vec.isSameVector(vector: child)
+                }
+                return true
+            }
+            
+            if let delChild = filtredChildren.first{
+                delChild.removeFromParent()
+            }
+        }
         
-        let newSP = grid?.gridPosition(row: Int(sp!.y + halfRAC), col: Int(sp!.x + halfRAC))
-        let newEP = grid?.gridPosition(row: Int(ep!.y + halfRAC), col: Int(ep!.x + halfRAC))
-        
-        let vector = VectorNode(arrowWithFillColor: color!, startPoint: newSP!, endPoint: newEP!)
-        grid!.addChild(vector)
+        arrLength = arrayLength
     }
 }

@@ -41,7 +41,7 @@ class VectorNode: SKShapeNode{
         return path
     }
     
-    convenience init(arrowWithFillColor fillColor: UIColor, startPoint: CGPoint, endPoint: CGPoint){
+    convenience init(fillColor: UIColor, startPoint: CGPoint, endPoint: CGPoint){
         let arrowPath = VectorNode.ArrowCGPath(arrowFromStart: startPoint, to: endPoint)
         
         self.init(path: arrowPath)
@@ -50,6 +50,10 @@ class VectorNode: SKShapeNode{
         self.lineWidth = arrowLineWidth
         self.startPoint = startPoint
         self.endPoint = endPoint
+    }
+    
+    public func isSameVector(vector: VectorNode)->Bool{
+        return self.fillColor == vector.fillColor
     }
 }
 

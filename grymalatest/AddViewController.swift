@@ -126,7 +126,7 @@ class AddViewController: UIViewController {
         let startPoint = CGPoint(x: floor(CGFloat(truncating: sx)), y: floor(CGFloat(truncating: sy)))
         let endPoint = CGPoint(x: floor(CGFloat(truncating: ex)), y: floor(CGFloat(truncating: ey)))
         
-        VectorsManager.shared.vectorsAsNodes.append(VectorNode(arrowWithFillColor: .random, startPoint: startPoint, endPoint: endPoint))
+        VectorsManager.shared.vectorsAsNodes.append(VectorNode(fillColor: .random, startPoint: startPoint, endPoint: endPoint))
         
         textFieldStartX?.text = ""
         textFieldStartY?.text = ""

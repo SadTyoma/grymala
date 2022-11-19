@@ -15,13 +15,17 @@ protocol VectorsManagerDelegate{
 
 class VectorsManager{
     public static let shared = VectorsManager()
-    public var delegate: VectorsManagerDelegate?
+    //public var delegate: VectorsManagerDelegate?
+    public let multicastVectorsManagerDelegate = MulticastDelegate<VectorsManagerDelegate>()
     private let context: NSManagedObjectContext?
     private let entity: NSEntityDescription?
     private var vectorsAsObjects: [NSManagedObject] = []
     public var vectorsAsNodes: [VectorNode] = []{
         didSet {
-            delegate?.vectorArrayChanged()
+            //delegate?.vectorArrayChanged()
+            self.multicastVectorsManagerDelegate.invokeForEachDelegate { delegate in
+                delegate.vectorArrayChanged()
+            }
         }
     }
     
@@ -76,7 +80,7 @@ class VectorsManager{
             let startPoint = CGPoint(x: CGFloat(vector.value(forKey: "sx") as! Int32), y: CGFloat(vector.value(forKey: "sy") as! Int32))
             let endPoint = CGPoint(x: CGFloat(vector.value(forKey: "ex") as! Int32), y: CGFloat(vector.value(forKey: "ey") as! Int32))
             
-            let node = VectorNode(arrowWithFillColor: color, startPoint: startPoint, endPoint: endPoint)
+            let node = VectorNode(fillColor: color, startPoint: startPoint, endPoint: endPoint)
             
             vectorsAsNodes.append(node)
         }
