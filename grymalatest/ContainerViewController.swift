@@ -91,6 +91,10 @@ extension ContainerViewController: AddViewControllerDelegate{
 }
 
 extension ContainerViewController: VectorsViewControllerDelegate{
+    func didRemoved(vector: VectorNode) {
+        gridVC.scene!.removeVector(vector: vector)
+    }
+    
     func didSelectVector(at index: Int) {
         gridVC.scene!.showVector(at: index)
     }

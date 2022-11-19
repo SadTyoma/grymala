@@ -62,8 +62,13 @@ class VectorNode: SKShapeNode{
         VectorNode.headLength /= scale
     }
     
-    public func isSameVector(vector: VectorNode)->Bool{
-        return self.fillColor == vector.fillColor
+    public func isSameVector(fillColor: UIColor, startPoint: CGPoint, endPoint: CGPoint)->Bool{
+        let start = self.startPoint?.equalTo(startPoint)
+        let end = self.endPoint?.equalTo(endPoint)
+        print("s:\(start!)")
+        print("e:\(end!)")
+        print("c:\(self.fillColor.isEqual(fillColor))")
+        return self.fillColor.isEqual(fillColor) && start! && end!
     }
 }
 

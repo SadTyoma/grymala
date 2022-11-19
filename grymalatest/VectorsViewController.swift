@@ -9,6 +9,7 @@ import UIKit
 
 protocol VectorsViewControllerDelegate{
     func didSelectVector(at index: Int)
+    func didRemoved(vector: VectorNode)
 }
 
 class VectorsViewController: UIViewController {
@@ -60,7 +61,8 @@ extension VectorsViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete{
             isUpdating = true
-            VectorsManager.shared.vectorsAsNodes.remove(at: indexPath.row)
+            let vec = VectorsManager.shared.vectorsAsNodes.remove(at: indexPath.row)
+            delegate?.didRemoved(vector: vec)
             tableView.beginUpdates()
             tableView.deleteRows(at: [indexPath], with: .fade)
             tableView.endUpdates()

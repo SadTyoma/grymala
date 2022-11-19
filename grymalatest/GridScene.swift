@@ -27,6 +27,7 @@ class GridScene: SKScene {
             addChild(grid)
         }
         VectorsManager.shared.multicastVectorsManagerDelegate.add(delegate: self)
+        VectorsManager.shared.getData()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -134,21 +135,31 @@ extension GridScene: VectorsManagerDelegate{
             let vector = VectorNode(fillColor: color!, startPoint: newSP!, endPoint: newEP!)
             grid!.addChild(vector)
         }else{
-            let children = getVectorsNodes()
-            
-            let filtredChildren = children.filter { child in
-                for vec in vectorsAsNodes{
-                    return !vec.isSameVector(vector: child)
-                }
-                return true
-            }
-            
-            if let delChild = filtredChildren.first{
-                delChild.removeFromParent()
-            }
+//            let children = getVectorsNodes()
+//
+//            let filtredChildren = children.filter { child in
+//                for vec in vectorsAsNodes{
+//                    let start = grid?.gridPosition(row: Int(vec.startPoint!.y + halfRAC), col: Int(vec.startPoint!.x + halfRAC))
+//                    let end = grid?.gridPosition(row: Int(vec.endPoint!.y + halfRAC), col: Int(vec.endPoint!.x + halfRAC))
+//                    return !child.isSameVector(fillColor: vec.fillColor, startPoint: start!, endPoint: end!)
+//                }
+//                return false
+//            }
+//
+//            if let delChild = patchedLines.last{
+//                delChild.removeFromParent()
+//            }
         }
         
         arrLength = arrayLength
+    }
+    
+    public func removeVector(vector: VectorNode){
+        let children = getVectorsNodes()
+        let toDel = children.first { vec in
+            return vec.fillColor.isEqual(vector.fillColor)
+        }
+        toDel?.removeFromParent()
     }
     
     private func getVectorsNodes() -> [VectorNode]{
