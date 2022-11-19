@@ -15,6 +15,7 @@ protocol GridViewControllerDelegate{
 
 class GridViewController: UIViewController, GridViewControllerDelegate {
     public var delegate: GridViewControllerDelegate?
+    public var scene: GridScene?
     
     override func loadView() {
         self.view = SKView.init(frame: UIScreen.main.bounds)
@@ -27,8 +28,9 @@ class GridViewController: UIViewController, GridViewControllerDelegate {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .done, target: self, action: #selector(addButtonDidTapped))
         
         if let view = self.view as! SKView? {
-            if let particleScene = SKScene(fileNamed: "GridScene") {
-                view.presentScene(particleScene)
+            if let gridScene = SKScene(fileNamed: "GridScene") {
+                self.scene = gridScene as? GridScene
+                view.presentScene(gridScene)
             }
         }
     }

@@ -10,9 +10,9 @@ import SpriteKit
 
 class VectorNode: SKShapeNode{
     private let arrowLineWidth = 1.0
-    private static let tailWidth = 5.0
-    private static let headWidth = 10.0
-    private static let headLength = 20.0
+    private static var tailWidth = 5.0
+    private static var headWidth = 10.0
+    private static var headLength = 20.0
     
     public var startPoint: CGPoint?
     public var endPoint: CGPoint?
@@ -50,6 +50,16 @@ class VectorNode: SKShapeNode{
         self.lineWidth = arrowLineWidth
         self.startPoint = startPoint
         self.endPoint = endPoint
+    }
+    
+    convenience init(fillColor: UIColor, startPoint: CGPoint, endPoint: CGPoint, scale: Double){
+        VectorNode.tailWidth *= scale
+        VectorNode.headWidth *= scale
+        VectorNode.headLength *= scale
+        self.init(fillColor: fillColor, startPoint: startPoint, endPoint: endPoint)
+        VectorNode.tailWidth /= scale
+        VectorNode.headWidth /= scale
+        VectorNode.headLength /= scale
     }
     
     public func isSameVector(vector: VectorNode)->Bool{

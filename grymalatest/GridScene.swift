@@ -18,6 +18,7 @@ class GridScene: SKScene {
     private var spinnyNode : SKShapeNode?
     private var grid: GridNode?
     private var arrLength = 0
+    private var animating = false
     
     override func didMove(to: SKView) {
         grid = GridNode(blockSize: blockSize, rows:rowsAndCols, cols:rowsAndCols)
@@ -85,6 +86,36 @@ class GridScene: SKScene {
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
     }
+    
+    public func showVector(at index: Int) {
+        guard !animating else {return}
+        animating = true
+        let children = getVectorsNodes()
+        let child = children[index]
+        let biggerVector = VectorNode(fillColor: child.fillColor, startPoint: child.startPoint!, endPoint: child.endPoint!, scale: 2.0)
+        
+        let shapeLayer = CAShapeLayer()
+        self.view!.layer.addSublayer(shapeLayer)
+        shapeLayer.fillColor = UIColor.clear.cgColor
+        shapeLayer.path = child.path
+        
+        let animation = CABasicAnimation.init(keyPath: "path")
+        animation.duration = 1.0
+        animation.fromValue  = child.path
+        animation.toValue = biggerVector.path
+        animation.isRemovedOnCompletion  = true
+        
+        shapeLayer.add(animation, forKey: "animation")
+
+        let action = SKAction.customAction(withDuration: animation.duration, actionBlock: { (node, timeDuration) in
+            (node as! SKShapeNode).path = shapeLayer.presentation()?.path
+        })
+        
+        child.run(SKAction.sequence([action, action.reversed()])) {
+            self.animating = false
+        }
+        shapeLayer.removeFromSuperlayer()
+    }
 }
 
 extension GridScene: VectorsManagerDelegate{
@@ -103,9 +134,7 @@ extension GridScene: VectorsManagerDelegate{
             let vector = VectorNode(fillColor: color!, startPoint: newSP!, endPoint: newEP!)
             grid!.addChild(vector)
         }else{
-            let children = grid!.children.filter({ node in
-                return node is VectorNode
-            }) as! [VectorNode]
+            let children = getVectorsNodes()
             
             let filtredChildren = children.filter { child in
                 for vec in vectorsAsNodes{
@@ -120,5 +149,13 @@ extension GridScene: VectorsManagerDelegate{
         }
         
         arrLength = arrayLength
+    }
+    
+    private func getVectorsNodes() -> [VectorNode]{
+        let nodes = grid!.children.filter({ node in
+            return node is VectorNode
+        }) as! [VectorNode]
+        
+        return nodes
     }
 }

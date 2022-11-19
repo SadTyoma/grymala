@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol VectorsViewControllerDelegate{
+    func didSelectVector(at index: Int)
+}
+
 class VectorsViewController: UIViewController {
     private var isUpdating = false
     private var tableView: UITableView = {
@@ -15,6 +19,8 @@ class VectorsViewController: UIViewController {
 
         return table
     }()
+    
+    public var delegate: VectorsViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,6 +66,9 @@ extension VectorsViewController: UITableViewDelegate, UITableViewDataSource{
             tableView.endUpdates()
             isUpdating = false
         }
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        delegate?.didSelectVector(at: indexPath.row)
     }
 }
 

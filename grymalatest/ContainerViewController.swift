@@ -33,6 +33,7 @@ class ContainerViewController: UIViewController {
         addChild(vectorVC)
         view.addSubview(vectorVC.view)
         vectorVC.didMove(toParent: self)
+        vectorVC.delegate = self
 
         addChild(addVC)
         view.addSubview(addVC.view)
@@ -86,5 +87,11 @@ extension ContainerViewController: GridViewControllerDelegate{
 extension ContainerViewController: AddViewControllerDelegate{
     func addButtontapped() {
         addButtonDidTapped()
+    }
+}
+
+extension ContainerViewController: VectorsViewControllerDelegate{
+    func didSelectVector(at index: Int) {
+        gridVC.scene!.showVector(at: index)
     }
 }

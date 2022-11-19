@@ -8,9 +8,6 @@
 import UIKit
 
 class VectorTableViewCell: UITableViewCell {
-
-
-
     @IBOutlet weak var color: UIView!
     @IBOutlet weak var length: UILabel!
     @IBOutlet weak var points: UILabel!
@@ -26,9 +23,9 @@ class VectorTableViewCell: UITableViewCell {
     }
     
     public func setPointText(startPoint: CGPoint, endPoint: CGPoint){
-        points.text = "(\(startPoint.x); \(startPoint.y)) -> (\(endPoint.x); \(endPoint.y))"
+        points.text = "(\(getFormatedNumber(startPoint.x)); \(getFormatedNumber(startPoint.y)) -> (\(getFormatedNumber(endPoint.x)); \(getFormatedNumber(endPoint.y)))"
         let lengthStringValue = NSString(format:"%.4f", getLenth(startPoint, endPoint))
-        length.text = "Length: \(lengthStringValue))"
+        length.text = "Length: \(lengthStringValue)"
     }
     
     public func setColor(color: UIColor){
@@ -40,5 +37,9 @@ class VectorTableViewCell: UITableViewCell {
         let y = pow(startPoint.y - endPoint.y, 2)
         let lenth = sqrt(x+y)
         return lenth
+    }
+    
+    private func getFormatedNumber(_ num: CGFloat)->NSString{
+        return NSString(format:"%.0f", num)
     }
 }
