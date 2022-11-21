@@ -19,6 +19,8 @@ class GridScene: SKScene {
     private var grid: GridNode?
     private var arrLength = 0
     private var animating = false
+    private var selectedVector: VectorNode?
+    private var gridSelected = true
     
     override func didMove(to: SKView) {
         grid = GridNode(blockSize: blockSize, rows:rowsAndCols, cols:rowsAndCols)
@@ -26,62 +28,144 @@ class GridScene: SKScene {
             grid.position = CGPoint (x:frame.midX, y:frame.midY)
             addChild(grid)
         }
+        let gestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(gridPanHandle))
+          self.view!.addGestureRecognizer(gestureRecognizer)
+        
         VectorsManager.shared.multicastVectorsManagerDelegate.add(delegate: self)
         VectorsManager.shared.getData()
     }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        /* Called when a touch begins */
-        for touch in touches{
-            let location = touch.location(in: self)
-            
-            if self.atPoint(location) == self.grid {
-                
-                fingureIsOnNinja = true  //make this true so it will only move when you touch it.
-                
-            }
+        
+    @objc private func gridPanHandle(recognizer: UIPanGestureRecognizer){
+        if recognizer.state == .began {
+            var touchLocation = recognizer.location(in: recognizer.view)
+            touchLocation = self.convertPoint(fromView: touchLocation)
+            selectNode(touchLocation: touchLocation)
+        }else if recognizer.state == .changed {
+            var translation = recognizer.translation(in: recognizer.view!)
+                translation = CGPoint(x: translation.x, y: -translation.y)
+
+            self.panForTranslation(translation: translation)
+
+            recognizer.setTranslation(CGPointZero, in: recognizer.view)
+        }else if recognizer.state == .ended {
+            gridSelected = false
+            selectedVector = nil
         }
     }
     
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if fingureIsOnNinja {
-            
-            if let touch = touches.first, let grid = grid {
-                
-                let touchLoc = touch.location(in: self)
-                let prevTouchLoc = touch.previousLocation(in: self)
-                var newYPos = grid.position.y + (touchLoc.y - prevTouchLoc.y)
-                var newXPos = grid.position.x + (touchLoc.x - prevTouchLoc.x)
-                
-                let bottomY = (grid.frame.height - frame.height) / 2
-                let topY = -bottomY
-                if newYPos < topY{
-                    newYPos = topY
-                }
-                else if newYPos > bottomY{
-                    newYPos = bottomY
-                }
-                
-                let leftX = (grid.frame.width - frame.width) / 2
-                let rightX = -leftX
-                if newXPos < rightX{
-                    newXPos = rightX
-                }
-                else if newXPos > leftX{
-                    newXPos = leftX
-                }
-                
-                grid.position = CGPoint (x:newXPos, y:newYPos)
-            }
+    func selectNode(touchLocation: CGPoint){
+        let touchedNode = self.atPoint(touchLocation)
+        
+        let touchedVector = getVectorsNodes().filter { vector in
+            return vector.pointBelongsToVector(point: touchLocation)
+        }
+        selectedVector = touchedVector.count > 0 ? touchedVector.first : nil
+        
+        gridSelected = selectedVector == nil
+    }
+
+
+    func panForTranslation(translation: CGPoint) {
+        if gridSelected{
+            gridPanTranslation(translation: translation)
+        }else if let selectedVector = selectedVector{
+            vectorPanTranslation(vector: selectedVector, translation: translation)
         }
     }
     
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+    func vectorPanTranslation(vector: VectorNode, translation: CGPoint){
+        var sp = vector.startPoint!
+        var ep = vector.endPoint!
+        
+        sp.x = sp.x + translation.x
+        sp.y = sp.y + translation.y
+        ep.x = ep.x + translation.x
+        ep.y = ep.y + translation.y
+        
+        vector.changePosition(startPoint: sp, endPoint: ep)
     }
     
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+    func gridPanTranslation(translation: CGPoint){
+        if let grid = grid {
+            let position = grid.position
+            
+            var newYPos = position.y + translation.y
+            var newXPos = position.x + translation.x
+            
+            let bottomY = (grid.frame.height - frame.height) / 2
+            let topY = -bottomY
+            if newYPos < topY{
+                newYPos = topY
+            }
+            else if newYPos > bottomY{
+                newYPos = bottomY
+            }
+            
+            let leftX = (grid.frame.width - frame.width) / 2
+            let rightX = -leftX
+            if newXPos < rightX{
+                newXPos = rightX
+            }
+            else if newXPos > leftX{
+                newXPos = leftX
+            }
+            
+            grid.position = CGPoint (x:newXPos, y:newYPos)
+        }
     }
+    
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        /* Called when a touch begins */
+//        for touch in touches{
+//            let location = touch.location(in: self)
+//
+//            if self.atPoint(location) == self.grid {
+//
+//                fingureIsOnNinja = true  //make this true so it will only move when you touch it.
+//
+//            }
+//        }
+//    }
+//
+//    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        if fingureIsOnNinja {
+//
+//            if let touch = touches.first, let grid = grid {
+//
+//                let touchLoc = touch.location(in: self)
+//                let prevTouchLoc = touch.previousLocation(in: self)
+//                var newYPos = grid.position.y + (touchLoc.y - prevTouchLoc.y)
+//                var newXPos = grid.position.x + (touchLoc.x - prevTouchLoc.x)
+//
+//                let bottomY = (grid.frame.height - frame.height) / 2
+//                let topY = -bottomY
+//                if newYPos < topY{
+//                    newYPos = topY
+//                }
+//                else if newYPos > bottomY{
+//                    newYPos = bottomY
+//                }
+//
+//                let leftX = (grid.frame.width - frame.width) / 2
+//                let rightX = -leftX
+//                if newXPos < rightX{
+//                    newXPos = rightX
+//                }
+//                else if newXPos > leftX{
+//                    newXPos = leftX
+//                }
+//
+//                grid.position = CGPoint (x:newXPos, y:newYPos)
+//            }
+//        }
+//    }
+//
+//
+//    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+//    }
+//
+//    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+//    }
     
     
     override func update(_ currentTime: TimeInterval) {

@@ -11,6 +11,7 @@
 		9A3F583F2926340900AA02A5 /* VectorNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3F583E2926340900AA02A5 /* VectorNode.swift */; };
 		9A3F58412926351500AA02A5 /* VectorsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3F58402926351500AA02A5 /* VectorsManager.swift */; };
 		9A3F58432926354100AA02A5 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3F58422926354100AA02A5 /* UIColorExtension.swift */; };
+		9A63623E292BEC6B0034E3D5 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A63623D292BEC6B0034E3D5 /* Constants.swift */; };
 		9A6840A7292587690059D234 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6840A6292587690059D234 /* AppDelegate.swift */; };
 		9A6840A9292587690059D234 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6840A8292587690059D234 /* SceneDelegate.swift */; };
 		9A6840AB292587690059D234 /* GridViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6840AA292587690059D234 /* GridViewController.swift */; };
@@ -33,6 +34,7 @@
 		9A3F583E2926340900AA02A5 /* VectorNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectorNode.swift; sourceTree = "<group>"; };
 		9A3F58402926351500AA02A5 /* VectorsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectorsManager.swift; sourceTree = "<group>"; };
 		9A3F58422926354100AA02A5 /* UIColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
+		9A63623D292BEC6B0034E3D5 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		9A6840A3292587690059D234 /* grymalatest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = grymalatest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A6840A6292587690059D234 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9A6840A8292587690059D234 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -92,6 +94,7 @@
 				9A6840BD292588090059D234 /* GridScene.sks */,
 				9A6840BF292588350059D234 /* GridScene.swift */,
 				9A3F583E2926340900AA02A5 /* VectorNode.swift */,
+				9A63623D292BEC6B0034E3D5 /* Constants.swift */,
 				9A3F583C29262F4500AA02A5 /* GridNode.swift */,
 				9AECD2F92926B56700B5B974 /* VectorTableViewCell.swift */,
 				9AECD2FA2926B56700B5B974 /* VectorTableViewCell.xib */,
@@ -184,6 +187,7 @@
 				9A6840C4292626E10059D234 /* VectorsViewController.swift in Sources */,
 				9A6840C6292626F30059D234 /* AddViewController.swift in Sources */,
 				9A3F58412926351500AA02A5 /* VectorsManager.swift in Sources */,
+				9A63623E292BEC6B0034E3D5 /* Constants.swift in Sources */,
 				9A6840AB292587690059D234 /* GridViewController.swift in Sources */,
 				9A6840B1292587690059D234 /* Vectors.xcdatamodeld in Sources */,
 				9A3F583F2926340900AA02A5 /* VectorNode.swift in Sources */,

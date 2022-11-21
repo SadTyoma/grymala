@@ -20,6 +20,7 @@ class GridNode:SKSpriteNode {
         self.blockSize = blockSize
         self.rows = rows
         self.cols = cols
+        name = Constants.gridName
         drawNumbers()
     }
     

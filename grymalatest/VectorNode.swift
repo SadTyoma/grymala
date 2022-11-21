@@ -17,7 +17,24 @@ class VectorNode: SKShapeNode{
     public var startPoint: CGPoint?
     public var endPoint: CGPoint?
     
-    private static func ArrowCGPath(arrowFromStart start: CGPoint, to end: CGPoint)->CGPath{
+    public func pointBelongsToVector(point: CGPoint) -> Bool{
+        let strokedPath = path!.copy(strokingWithWidth: 10.0,
+                                     lineCap: .round,
+                                     lineJoin: .miter,
+                                     miterLimit: 30.0)
+        let pointIsNearPath = strokedPath.contains(point) || path!.contains(point)
+        print("\(pointIsNearPath)")
+        return pointIsNearPath
+    }
+    
+    public func changePosition(startPoint: CGPoint, endPoint: CGPoint){
+        let vectorPath = VectorNode.VectorCGPath(arrowFromStart: startPoint, to: endPoint)
+        self.startPoint = startPoint
+        self.endPoint = endPoint
+        self.path = vectorPath
+    }
+    
+    private static func VectorCGPath(arrowFromStart start: CGPoint, to end: CGPoint)->CGPath{
         let length = hypot(end.x - start.x, end.y - start.y)
         let tailLength = length - headLength
         
@@ -42,14 +59,15 @@ class VectorNode: SKShapeNode{
     }
     
     convenience init(fillColor: UIColor, startPoint: CGPoint, endPoint: CGPoint){
-        let arrowPath = VectorNode.ArrowCGPath(arrowFromStart: startPoint, to: endPoint)
+        let vectorPath = VectorNode.VectorCGPath(arrowFromStart: startPoint, to: endPoint)
         
-        self.init(path: arrowPath)
+        self.init(path: vectorPath)
         self.fillColor = fillColor
         self.strokeColor = strokeColor
         self.lineWidth = arrowLineWidth
         self.startPoint = startPoint
         self.endPoint = endPoint
+        name = Constants.vectorName
     }
     
     convenience init(fillColor: UIColor, startPoint: CGPoint, endPoint: CGPoint, scale: Double){
@@ -60,15 +78,6 @@ class VectorNode: SKShapeNode{
         VectorNode.tailWidth /= scale
         VectorNode.headWidth /= scale
         VectorNode.headLength /= scale
-    }
-    
-    public func isSameVector(fillColor: UIColor, startPoint: CGPoint, endPoint: CGPoint)->Bool{
-        let start = self.startPoint?.equalTo(startPoint)
-        let end = self.endPoint?.equalTo(endPoint)
-        print("s:\(start!)")
-        print("e:\(end!)")
-        print("c:\(self.fillColor.isEqual(fillColor))")
-        return self.fillColor.isEqual(fillColor) && start! && end!
     }
 }
 
