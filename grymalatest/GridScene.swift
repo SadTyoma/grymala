@@ -51,7 +51,23 @@ class GridScene: SKScene, UIGestureRecognizerDelegate {
             gridSelected = true
             startPointSelected = false
             endPointSelected = false
+            saveChanges()
             selectedVector = nil
+        }
+    }
+    
+    private func saveChanges(){
+        var vec = VectorsManager.shared.vectorsAsNodes.first { vector in
+            return vector.fillColor.isEqual(selectedVector?.fillColor)
+        }
+        if let vec = vec, let grid = grid{
+            vec.startPoint = grid.gridPosition(point: selectedVector!.startPoint!)
+            vec.endPoint = grid.gridPosition(point: selectedVector!.endPoint!)
+            VectorsManager.shared.reloadDataForVector(vec)
+            
+            let newSP = grid.gridPosition(row: Int(vec.startPoint!.y + halfRAC), col: Int(vec.startPoint!.x + halfRAC))
+            let newEP = grid.gridPosition(row: Int(vec.endPoint!.y + halfRAC), col: Int(vec.endPoint!.x + halfRAC))
+            selectedVector?.changePosition(startPoint: newSP, endPoint: newEP)
         }
     }
         
@@ -236,6 +252,8 @@ class GridScene: SKScene, UIGestureRecognizerDelegate {
 }
 
 extension GridScene: VectorsManagerDelegate{
+    func reloadItem(at row: Int) {}
+    
     func vectorArrayChanged() {
         let vectorsAsNodes = VectorsManager.shared.vectorsAsNodes
         let arrayLength = vectorsAsNodes.count

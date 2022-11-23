@@ -11,6 +11,7 @@ import UIKit
 
 protocol VectorsManagerDelegate{
     func vectorArrayChanged()
+    func reloadItem(at row: Int)
 }
 
 class VectorsManager{
@@ -42,6 +43,12 @@ class VectorsManager{
         
         for vector in vectorsAsNodes{
             saveVector(startPoint: vector.startPoint!, endPoint: vector.endPoint!, color: vector.fillColor.toHex!)
+        }
+    }
+    
+    public func reloadDataForVector(_ vector: VectorNode){
+        multicastVectorsManagerDelegate.invokeForEachDelegate { delegate in
+            delegate.reloadItem(at: vectorsAsNodes.firstIndex(of: vector)!)
         }
     }
     

@@ -75,6 +75,10 @@ extension VectorsViewController: UITableViewDelegate, UITableViewDataSource{
 }
 
 extension VectorsViewController: VectorsManagerDelegate{
+    func reloadItem(at row: Int) {
+        tableView.reloadRows(at: [IndexPath(item: row, section: 0)], with: .fade)
+    }
+    
     func vectorArrayChanged() {
         if !isUpdating{
             tableView.reloadData()
