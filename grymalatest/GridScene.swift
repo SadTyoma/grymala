@@ -21,6 +21,8 @@ class GridScene: SKScene {
     private var animating = false
     private var selectedVector: VectorNode?
     private var gridSelected = true
+    private var startPointSelected = false
+    private var endPointSelected = false
     
     override func didMove(to: SKView) {
         grid = GridNode(blockSize: blockSize, rows:rowsAndCols, cols:rowsAndCols)
@@ -49,17 +51,24 @@ class GridScene: SKScene {
             recognizer.setTranslation(CGPointZero, in: recognizer.view)
         }else if recognizer.state == .ended {
             gridSelected = false
+            startPointSelected = false
+            endPointSelected = false
             selectedVector = nil
         }
     }
     
     func selectNode(touchLocation: CGPoint){
-        let touchedNode = self.atPoint(touchLocation)
+        let correctLocation = CGPoint(x: touchLocation.x - grid!.position.x, y: touchLocation.y - grid!.position.y)
         
         let touchedVector = getVectorsNodes().filter { vector in
-            return vector.pointBelongsToVector(point: touchLocation)
+            return vector.pointBelongsToVector(point: correctLocation)
         }
         selectedVector = touchedVector.count > 0 ? touchedVector.first : nil
+        
+        if let selectedVector = selectedVector{
+            startPointSelected = selectedVector.pointBelongsToStartPoint(point: correctLocation)
+            endPointSelected = selectedVector.pointBelongsToEndPoint(point: correctLocation)
+        }
         
         gridSelected = selectedVector == nil
     }
@@ -82,7 +91,13 @@ class GridScene: SKScene {
         ep.x = ep.x + translation.x
         ep.y = ep.y + translation.y
         
-        vector.changePosition(startPoint: sp, endPoint: ep)
+        if startPointSelected{
+            vector.changePosition(startPoint: sp)
+        }else if endPointSelected{
+            vector.changePosition(endPoint: ep)
+        }else{
+            vector.changePosition(startPoint: sp, endPoint: ep)
+        }
     }
     
     func gridPanTranslation(translation: CGPoint){

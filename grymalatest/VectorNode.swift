@@ -21,15 +21,44 @@ class VectorNode: SKShapeNode{
         let strokedPath = path!.copy(strokingWithWidth: 10.0,
                                      lineCap: .round,
                                      lineJoin: .miter,
-                                     miterLimit: 30.0)
+                                     miterLimit: 50.0)
         let pointIsNearPath = strokedPath.contains(point) || path!.contains(point)
-        print("\(pointIsNearPath)")
         return pointIsNearPath
+    }
+    
+    public func pointBelongsToStartPoint(point: CGPoint) -> Bool{
+        let rad = 30.0
+        let x = pow(abs(startPoint!.x) - abs(point.x), 2)
+        let y = pow(abs(startPoint!.y) - abs(point.y), 2)
+        let d = sqrt(x + y)
+        
+        return d <= rad
+    }
+    
+    public func pointBelongsToEndPoint(point: CGPoint) -> Bool{
+        let rad = 30.0
+        let x = pow(endPoint!.x - point.x, 2)
+        let y = pow(endPoint!.y - point.y, 2)
+        let d = sqrt(x + y)
+        
+        return d <= rad
     }
     
     public func changePosition(startPoint: CGPoint, endPoint: CGPoint){
         let vectorPath = VectorNode.VectorCGPath(arrowFromStart: startPoint, to: endPoint)
         self.startPoint = startPoint
+        self.endPoint = endPoint
+        self.path = vectorPath
+    }
+    
+    public func changePosition(startPoint: CGPoint){
+        let vectorPath = VectorNode.VectorCGPath(arrowFromStart: startPoint, to: self.endPoint!)
+        self.startPoint = startPoint
+        self.path = vectorPath
+    }
+    
+    public func changePosition(endPoint: CGPoint){
+        let vectorPath = VectorNode.VectorCGPath(arrowFromStart: self.startPoint!, to: endPoint)
         self.endPoint = endPoint
         self.path = vectorPath
     }
