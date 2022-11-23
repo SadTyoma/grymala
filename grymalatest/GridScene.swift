@@ -8,7 +8,7 @@
 import SpriteKit
 import GameplayKit
 
-class GridScene: SKScene {
+class GridScene: SKScene, UIGestureRecognizerDelegate {
     private let blockSize = 40.0
     private let rowsAndCols = 51
     private let halfRAC = 25.0
@@ -30,18 +30,34 @@ class GridScene: SKScene {
             grid.position = CGPoint (x:frame.midX, y:frame.midY)
             addChild(grid)
         }
-        let gestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(gridPanHandle))
-          self.view!.addGestureRecognizer(gestureRecognizer)
+        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(gridPanHandle))
+          self.view!.addGestureRecognizer(panGestureRecognizer)
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressHandle))
+          self.view!.addGestureRecognizer(longPressGestureRecognizer)
+        panGestureRecognizer.delegate = self
+        longPressGestureRecognizer.delegate = self
         
         VectorsManager.shared.multicastVectorsManagerDelegate.add(delegate: self)
         VectorsManager.shared.getData()
     }
-        
-    @objc private func gridPanHandle(recognizer: UIPanGestureRecognizer){
+    
+    @objc private func longPressHandle(recognizer: UIPanGestureRecognizer){
         if recognizer.state == .began {
             var touchLocation = recognizer.location(in: recognizer.view)
             touchLocation = self.convertPoint(fromView: touchLocation)
             selectNode(touchLocation: touchLocation)
+        }
+        else if recognizer.state == .ended {
+            gridSelected = true
+            startPointSelected = false
+            endPointSelected = false
+            selectedVector = nil
+        }
+    }
+        
+    @objc private func gridPanHandle(recognizer: UIPanGestureRecognizer){
+        if recognizer.state == .began {
+
         }else if recognizer.state == .changed {
             var translation = recognizer.translation(in: recognizer.view!)
                 translation = CGPoint(x: translation.x, y: -translation.y)
@@ -50,10 +66,7 @@ class GridScene: SKScene {
 
             recognizer.setTranslation(CGPointZero, in: recognizer.view)
         }else if recognizer.state == .ended {
-            gridSelected = false
-            startPointSelected = false
-            endPointSelected = false
-            selectedVector = nil
+
         }
     }
     
@@ -216,6 +229,10 @@ class GridScene: SKScene {
         }
         shapeLayer.removeFromSuperlayer()
     }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+     }
 }
 
 extension GridScene: VectorsManagerDelegate{
