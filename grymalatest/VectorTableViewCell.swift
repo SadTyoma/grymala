@@ -23,7 +23,7 @@ class VectorTableViewCell: UITableViewCell {
     }
     
     public func setPointText(startPoint: CGPoint, endPoint: CGPoint){
-        points.text = "(\(getFormatedNumber(startPoint.x)); \(getFormatedNumber(startPoint.y)) -> (\(getFormatedNumber(endPoint.x)); \(getFormatedNumber(endPoint.y)))"
+        points.text = "(\(getFormatedNumber(startPoint.x)); \(getFormatedNumber(startPoint.y))) -> (\(getFormatedNumber(endPoint.x)); \(getFormatedNumber(endPoint.y)))"
         let lengthStringValue = NSString(format:"%.4f", getLenth(startPoint, endPoint))
         length.text = "Length: \(lengthStringValue)"
     }
