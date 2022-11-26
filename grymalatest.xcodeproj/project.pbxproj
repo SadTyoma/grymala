@@ -24,6 +24,7 @@
 		9A6840C22926138F0059D234 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6840C12926138F0059D234 /* ContainerViewController.swift */; };
 		9A6840C4292626E10059D234 /* VectorsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6840C3292626E10059D234 /* VectorsViewController.swift */; };
 		9A6840C6292626F30059D234 /* AddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6840C5292626F30059D234 /* AddViewController.swift */; };
+		9A86417529325969003069FA /* VectorsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A86417429325969003069FA /* VectorsHelper.swift */; };
 		9AC443F6292901DB002CE254 /* MulticastDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC443F5292901DB002CE254 /* MulticastDelegate.swift */; };
 		9AECD2FB2926B56700B5B974 /* VectorTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AECD2F92926B56700B5B974 /* VectorTableViewCell.swift */; };
 		9AECD2FC2926B56700B5B974 /* VectorTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9AECD2FA2926B56700B5B974 /* VectorTableViewCell.xib */; };
@@ -49,6 +50,7 @@
 		9A6840C12926138F0059D234 /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
 		9A6840C3292626E10059D234 /* VectorsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectorsViewController.swift; sourceTree = "<group>"; };
 		9A6840C5292626F30059D234 /* AddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddViewController.swift; sourceTree = "<group>"; };
+		9A86417429325969003069FA /* VectorsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectorsHelper.swift; sourceTree = "<group>"; };
 		9AC443F5292901DB002CE254 /* MulticastDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MulticastDelegate.swift; sourceTree = "<group>"; };
 		9AECD2F92926B56700B5B974 /* VectorTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectorTableViewCell.swift; sourceTree = "<group>"; };
 		9AECD2FA2926B56700B5B974 /* VectorTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VectorTableViewCell.xib; sourceTree = "<group>"; };
@@ -93,6 +95,7 @@
 				9AC443F5292901DB002CE254 /* MulticastDelegate.swift */,
 				9A6840BD292588090059D234 /* GridScene.sks */,
 				9A6840BF292588350059D234 /* GridScene.swift */,
+				9A86417429325969003069FA /* VectorsHelper.swift */,
 				9A3F583E2926340900AA02A5 /* VectorNode.swift */,
 				9A63623D292BEC6B0034E3D5 /* Constants.swift */,
 				9A3F583C29262F4500AA02A5 /* GridNode.swift */,
@@ -186,6 +189,7 @@
 				9A3F583D29262F4500AA02A5 /* GridNode.swift in Sources */,
 				9A6840C4292626E10059D234 /* VectorsViewController.swift in Sources */,
 				9A6840C6292626F30059D234 /* AddViewController.swift in Sources */,
+				9A86417529325969003069FA /* VectorsHelper.swift in Sources */,
 				9A3F58412926351500AA02A5 /* VectorsManager.swift in Sources */,
 				9A63623E292BEC6B0034E3D5 /* Constants.swift in Sources */,
 				9A6840AB292587690059D234 /* GridViewController.swift in Sources */,

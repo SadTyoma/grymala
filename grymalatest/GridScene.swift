@@ -26,6 +26,7 @@ class GridScene: SKScene, UIGestureRecognizerDelegate {
     private var horizontalHelp = true
     private var verticalHelp = true
     private var toVectorHelp = true
+    private var angleHelp = true
     
     override func didMove(to: SKView) {
         grid = GridNode(blockSize: blockSize, rows:rowsAndCols, cols:rowsAndCols)
@@ -60,6 +61,7 @@ class GridScene: SKScene, UIGestureRecognizerDelegate {
             horizontalHelp = true
             verticalHelp = true
             toVectorHelp = true
+            angleHelp = true
         }
     }
     
@@ -128,16 +130,42 @@ class GridScene: SKScene, UIGestureRecognizerDelegate {
         ep.y = ep.y + translation.y
         
         if startPointSelected{
-            if !needHorizontalHelp(vector: vector, point: sp) && !needVerticalHelp(vector: vector, point: sp) && !toVectorHelp(vector: vector, point: sp){
+            if !needHorizontalHelp(vector: vector, point: sp) && !needVerticalHelp(vector: vector, point: sp) && !toVectorHelp(vector: vector, point: sp) && !angleHelp(vector: vector, point: sp){
                 vector.changePosition(startPoint: sp)
             }
         }else if endPointSelected{
-            if !needHorizontalHelp(vector: vector, point: ep) && !needVerticalHelp(vector: vector, point: ep) && !toVectorHelp(vector: vector, point: ep){
+            if !needHorizontalHelp(vector: vector, point: ep) && !needVerticalHelp(vector: vector, point: ep) && !toVectorHelp(vector: vector, point: ep) && !angleHelp(vector: vector, point: ep){
                 vector.changePosition(endPoint: ep)
             }
         }else{
             vector.changePosition(startPoint: sp, endPoint: ep)
         }
+    }
+    
+    private func angleHelp(vector: VectorNode,point: CGPoint)->Bool{
+        //let pointOnGrid = grid!.gridPosition(point: point)
+        let allVectors = getVectorsNodes().filter { vec in
+            return !vec.fillColor.isEqual(vector.fillColor)
+        }
+        let filtredVectors = allVectors.filter { vec in
+            return vec.startPoint!.equalTo(vector.startPoint!)
+        }
+        if endPointSelected && filtredVectors.count > 0{
+            let vector2 = filtredVectors.first!
+            let vector1Copy = vector.copy() as! VectorNode
+            vector1Copy.startPoint = vector.startPoint
+            vector1Copy.changePosition(endPoint: point)
+            let needToRemove = angleDiff(v1: vector1Copy, v2: vector2)
+            if angleHelp && needToRemove{
+                vector.changePosition(endPoint: point)
+                angleHelp = false
+                return true
+            }else if !needToRemove{
+                angleHelp = true
+            }
+        }
+        
+        return false
     }
     
     private func toVectorHelp(vector: VectorNode, point: CGPoint)->Bool{
@@ -181,6 +209,17 @@ class GridScene: SKScene, UIGestureRecognizerDelegate {
     
     private func pointsDiff(p1:Double, p2:Double)->Bool{
         return abs(p1 - p2) < 0.5
+    }
+    
+    private func angleDiff(v1:VectorNode, v2:VectorNode)->Bool{
+        let vector1 = VectorsManager.shared.vectorsAsNodes.first { vec in
+            return vec.fillColor.isEqual(v1.fillColor)
+        }
+        let vector2 = VectorsManager.shared.vectorsAsNodes.first { vec in
+            vec.fillColor.isEqual(v2.fillColor)
+        }
+        let cosValue = VectorsHelper.getAngle(v1: vector1!, v2: vector2!)
+        return abs(cosValue) < 0.1
     }
     
     private func needHorizontalHelp(vector: VectorNode, point: CGPoint)->Bool{
