@@ -64,7 +64,7 @@ class GridScene: SKScene, UIGestureRecognizerDelegate {
     }
     
     private func saveChanges(){
-        var vec = VectorsManager.shared.vectorsAsNodes.first { vector in
+        let vec = VectorsManager.shared.vectorsAsNodes.first { vector in
             return vector.fillColor.isEqual(selectedVector?.fillColor)
         }
         if let vec = vec, let grid = grid{
@@ -267,61 +267,7 @@ class GridScene: SKScene, UIGestureRecognizerDelegate {
             grid.position = CGPoint (x:newXPos, y:newYPos)
         }
     }
-    
-//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        /* Called when a touch begins */
-//        for touch in touches{
-//            let location = touch.location(in: self)
-//
-//            if self.atPoint(location) == self.grid {
-//
-//                fingureIsOnNinja = true  //make this true so it will only move when you touch it.
-//
-//            }
-//        }
-//    }
-//
-//    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        if fingureIsOnNinja {
-//
-//            if let touch = touches.first, let grid = grid {
-//
-//                let touchLoc = touch.location(in: self)
-//                let prevTouchLoc = touch.previousLocation(in: self)
-//                var newYPos = grid.position.y + (touchLoc.y - prevTouchLoc.y)
-//                var newXPos = grid.position.x + (touchLoc.x - prevTouchLoc.x)
-//
-//                let bottomY = (grid.frame.height - frame.height) / 2
-//                let topY = -bottomY
-//                if newYPos < topY{
-//                    newYPos = topY
-//                }
-//                else if newYPos > bottomY{
-//                    newYPos = bottomY
-//                }
-//
-//                let leftX = (grid.frame.width - frame.width) / 2
-//                let rightX = -leftX
-//                if newXPos < rightX{
-//                    newXPos = rightX
-//                }
-//                else if newXPos > leftX{
-//                    newXPos = leftX
-//                }
-//
-//                grid.position = CGPoint (x:newXPos, y:newYPos)
-//            }
-//        }
-//    }
-//
-//
-//    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-//    }
-//
-//    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-//    }
-    
-    
+
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
     }
@@ -378,21 +324,6 @@ extension GridScene: VectorsManagerDelegate{
             
             let vector = VectorNode(fillColor: color!, startPoint: newSP!, endPoint: newEP!)
             grid!.addChild(vector)
-        }else{
-//            let children = getVectorsNodes()
-//
-//            let filtredChildren = children.filter { child in
-//                for vec in vectorsAsNodes{
-//                    let start = grid?.gridPosition(row: Int(vec.startPoint!.y + halfRAC), col: Int(vec.startPoint!.x + halfRAC))
-//                    let end = grid?.gridPosition(row: Int(vec.endPoint!.y + halfRAC), col: Int(vec.endPoint!.x + halfRAC))
-//                    return !child.isSameVector(fillColor: vec.fillColor, startPoint: start!, endPoint: end!)
-//                }
-//                return false
-//            }
-//
-//            if let delChild = patchedLines.last{
-//                delChild.removeFromParent()
-//            }
         }
         
         arrLength = arrayLength
