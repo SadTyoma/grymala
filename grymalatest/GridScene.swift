@@ -25,6 +25,7 @@ class GridScene: SKScene, UIGestureRecognizerDelegate {
     private var endPointSelected = false
     private var horizontalHelp = true
     private var verticalHelp = true
+    private var toVectorHelp = true
     
     override func didMove(to: SKView) {
         grid = GridNode(blockSize: blockSize, rows:rowsAndCols, cols:rowsAndCols)
@@ -58,6 +59,7 @@ class GridScene: SKScene, UIGestureRecognizerDelegate {
             
             horizontalHelp = true
             verticalHelp = true
+            toVectorHelp = true
         }
     }
     
@@ -126,11 +128,11 @@ class GridScene: SKScene, UIGestureRecognizerDelegate {
         ep.y = ep.y + translation.y
         
         if startPointSelected{
-            if !needHorizontalHelp(vector: vector, point: sp) && !needVerticalHelp(vector: vector, point: sp){
+            if !needHorizontalHelp(vector: vector, point: sp) && !needVerticalHelp(vector: vector, point: sp) && !toVectorHelp(vector: vector, point: sp){
                 vector.changePosition(startPoint: sp)
             }
         }else if endPointSelected{
-            if !needHorizontalHelp(vector: vector, point: ep) && !needVerticalHelp(vector: vector, point: ep){
+            if !needHorizontalHelp(vector: vector, point: ep) && !needVerticalHelp(vector: vector, point: ep) && !toVectorHelp(vector: vector, point: ep){
                 vector.changePosition(endPoint: ep)
             }
         }else{
@@ -138,21 +140,65 @@ class GridScene: SKScene, UIGestureRecognizerDelegate {
         }
     }
     
+    private func toVectorHelp(vector: VectorNode, point: CGPoint)->Bool{
+        let pointOnGrid = grid!.gridPosition(point: point)
+        let allVectors = getVectorsNodes().filter { vec in
+            return !vec.fillColor.isEqual(vector.fillColor)
+        }
+        let filtredVectors = allVectors.filter { vec in
+            let sp = grid!.gridPosition(point: vec.startPoint!)
+            let ep = grid!.gridPosition(point: vec.endPoint!)
+            return (pointsDiff(p1:sp.x, p2:pointOnGrid.x) && pointsDiff(p1: sp.y, p2: pointOnGrid.y)) || (pointsDiff(p1: ep.y, p2: pointOnGrid.y) && pointsDiff(p1: ep.x, p2: pointOnGrid.x))
+        }
+        
+        if filtredVectors.count > 0{
+            guard toVectorHelp else {return false}
+            let firstVec = filtredVectors.first!
+            let sp = grid!.gridPosition(point: firstVec.startPoint!)
+            let ep = grid!.gridPosition(point: firstVec.endPoint!)
+            let vecPoint = pointsDiff(p1:sp.x, p2:pointOnGrid.x) && pointsDiff(p1: sp.y, p2: pointOnGrid.y) ?
+            firstVec.startPoint :
+            pointsDiff(p1: ep.y, p2: pointOnGrid.y) && pointsDiff(p1: ep.x, p2: pointOnGrid.x) ?
+            firstVec.endPoint :
+            nil
+            
+            guard let vecPoint = vecPoint else {return false}
+            if startPointSelected{
+                vector.changePosition(startPoint: vecPoint)
+                toVectorHelp = false
+                return true
+            }else if endPointSelected{
+                vector.changePosition(endPoint: vecPoint)
+                toVectorHelp = false
+                return true
+            }
+        }else{
+            toVectorHelp = true
+        }
+        
+        return false
+    }
+    
+    private func pointsDiff(p1:Double, p2:Double)->Bool{
+        return abs(p1 - p2) < 0.5
+    }
+    
     private func needHorizontalHelp(vector: VectorNode, point: CGPoint)->Bool{
         let pointOnGrid = grid!.gridPosition(point: point)
         if startPointSelected{
             let endPoint = grid!.gridPosition(point: vector.endPoint!)
-            if horizontalHelp && abs(endPoint.y - pointOnGrid.y) < 2{
+            let needToRemove = pointsDiff(p1:endPoint.y, p2:pointOnGrid.y)
+            if horizontalHelp && needToRemove{
                 let resultPoint = CGPoint(x: pointOnGrid.x + halfRAC, y: endPoint.y + halfRAC)
                 vector.changePosition(startPoint: grid!.gridPosition(row: Int(resultPoint.y), col: Int(resultPoint.x)))
                 horizontalHelp = false
                 return true
-            }else{
+            }else if !needToRemove{
                 horizontalHelp = true
             }
         }else if endPointSelected{
             let startPoint = grid!.gridPosition(point: vector.startPoint!)
-            let needToRemove = abs(startPoint.y - pointOnGrid.y) < 0.5
+            let needToRemove = pointsDiff(p1:startPoint.y, p2:pointOnGrid.y)
             if horizontalHelp && needToRemove{
                 let resultPoint = CGPoint(x: pointOnGrid.x + halfRAC, y: startPoint.y + halfRAC)
                 vector.changePosition(endPoint: grid!.gridPosition(row: Int(resultPoint.y), col: Int(resultPoint.x)))
@@ -169,17 +215,18 @@ class GridScene: SKScene, UIGestureRecognizerDelegate {
         let pointOnGrid = grid!.gridPosition(point: point)
         if startPointSelected{
             let endPoint = grid!.gridPosition(point: vector.endPoint!)
-            if verticalHelp && abs(endPoint.x - pointOnGrid.x) < 2{
+            let needToRemove = pointsDiff(p1:endPoint.x ,p2:pointOnGrid.x)
+            if verticalHelp && needToRemove{
                 let resultPoint = CGPoint(x: endPoint.x + halfRAC, y: pointOnGrid.y + halfRAC)
                 vector.changePosition(startPoint: grid!.gridPosition(row: Int(resultPoint.y), col: Int(resultPoint.x)))
                 verticalHelp = false
                 return true
-            }else{
+            }else if !needToRemove{
                 verticalHelp = true
             }
         }else if endPointSelected{
             let startPoint = grid!.gridPosition(point: vector.startPoint!)
-            let needToRemove = abs(startPoint.x - pointOnGrid.x) < 0.5
+            let needToRemove = pointsDiff(p1:startPoint.x , p2:pointOnGrid.x)
             if verticalHelp && needToRemove{
                 let resultPoint = CGPoint(x: startPoint.x + halfRAC, y: pointOnGrid.y + halfRAC)
                 vector.changePosition(endPoint: grid!.gridPosition(row: Int(resultPoint.y), col: Int(resultPoint.x)))
