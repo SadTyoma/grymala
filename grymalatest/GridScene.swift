@@ -9,10 +9,6 @@ import SpriteKit
 import GameplayKit
 
 class GridScene: SKScene, UIGestureRecognizerDelegate {
-    private let blockSize = 40.0
-    private let rowsAndCols = 51
-    private let halfRAC = 25.0
-    
     private var fingureIsOnNinja = false
     private var label : SKLabelNode?
     private var spinnyNode : SKShapeNode?
@@ -29,7 +25,7 @@ class GridScene: SKScene, UIGestureRecognizerDelegate {
     private var angleHelp = true
     
     override func didMove(to: SKView) {
-        grid = GridNode(blockSize: blockSize, rows:rowsAndCols, cols:rowsAndCols)
+        grid = GridNode(blockSize: Constants.blockSize, rows:Constants.rowsAndCols, cols:Constants.rowsAndCols)
         if let grid = grid {
             grid.position = CGPoint (x:frame.midX, y:frame.midY)
             addChild(grid)
@@ -74,8 +70,8 @@ class GridScene: SKScene, UIGestureRecognizerDelegate {
             vec.endPoint = grid.gridPosition(point: selectedVector!.endPoint!)
             VectorsManager.shared.reloadDataForVector(vec)
             
-            let newSP = grid.gridPosition(row: Int(vec.startPoint!.y + halfRAC), col: Int(vec.startPoint!.x + halfRAC))
-            let newEP = grid.gridPosition(row: Int(vec.endPoint!.y + halfRAC), col: Int(vec.endPoint!.x + halfRAC))
+            let newSP = grid.gridPosition(row: Int(vec.startPoint!.y + Constants.halfRAC), col: Int(vec.startPoint!.x + Constants.halfRAC))
+            let newEP = grid.gridPosition(row: Int(vec.endPoint!.y + Constants.halfRAC), col: Int(vec.endPoint!.x + Constants.halfRAC))
             selectedVector?.changePosition(startPoint: newSP, endPoint: newEP)
         }
     }
@@ -130,11 +126,11 @@ class GridScene: SKScene, UIGestureRecognizerDelegate {
         ep.y = ep.y + translation.y
         
         if startPointSelected{
-            if !needHorizontalHelp(vector: vector, point: sp) && !needVerticalHelp(vector: vector, point: sp) && !toVectorHelp(vector: vector, point: sp) && !angleHelp(vector: vector, point: sp){
+            if !needHorizontalHelp(vector: vector, point: sp) && !needVerticalHelp(vector: vector, point: sp) && !toVectorHelp(vector: vector, point: sp){
                 vector.changePosition(startPoint: sp)
             }
         }else if endPointSelected{
-            if !needHorizontalHelp(vector: vector, point: ep) && !needVerticalHelp(vector: vector, point: ep) && !toVectorHelp(vector: vector, point: ep) && !angleHelp(vector: vector, point: ep){
+            if !angleHelp(vector: vector, point: ep) && !needHorizontalHelp(vector: vector, point: ep) && !needVerticalHelp(vector: vector, point: ep) && !toVectorHelp(vector: vector, point: ep){
                 vector.changePosition(endPoint: ep)
             }
         }else{
@@ -143,7 +139,6 @@ class GridScene: SKScene, UIGestureRecognizerDelegate {
     }
     
     private func angleHelp(vector: VectorNode,point: CGPoint)->Bool{
-        //let pointOnGrid = grid!.gridPosition(point: point)
         let allVectors = getVectorsNodes().filter { vec in
             return !vec.fillColor.isEqual(vector.fillColor)
         }
@@ -154,10 +149,14 @@ class GridScene: SKScene, UIGestureRecognizerDelegate {
             let vector2 = filtredVectors.first!
             let vector1Copy = vector.copy() as! VectorNode
             vector1Copy.startPoint = vector.startPoint
-            vector1Copy.changePosition(endPoint: point)
+            vector1Copy.endPoint = point
             let needToRemove = angleDiff(v1: vector1Copy, v2: vector2)
             if angleHelp && needToRemove{
-                vector.changePosition(endPoint: point)
+                let ep = VectorsHelper.findEndPoint(for: vector, v2: vector2, point: point)
+                if VectorsHelper.getLength(grid!.gridPosition(point: vector.startPoint!), grid!.gridPosition(point: ep)) < 1{
+                    return false
+                }
+                vector.changePosition(endPoint: ep)
                 angleHelp = false
                 return true
             }else if !needToRemove{
@@ -212,14 +211,8 @@ class GridScene: SKScene, UIGestureRecognizerDelegate {
     }
     
     private func angleDiff(v1:VectorNode, v2:VectorNode)->Bool{
-        let vector1 = VectorsManager.shared.vectorsAsNodes.first { vec in
-            return vec.fillColor.isEqual(v1.fillColor)
-        }
-        let vector2 = VectorsManager.shared.vectorsAsNodes.first { vec in
-            vec.fillColor.isEqual(v2.fillColor)
-        }
-        let cosValue = VectorsHelper.getAngle(v1: vector1!, v2: vector2!)
-        return abs(cosValue) < 0.1
+        let cosValue = VectorsHelper.getAngle(v1: v1, v2: v2)
+        return abs(cosValue) < 0.25
     }
     
     private func needHorizontalHelp(vector: VectorNode, point: CGPoint)->Bool{
@@ -228,7 +221,7 @@ class GridScene: SKScene, UIGestureRecognizerDelegate {
             let endPoint = grid!.gridPosition(point: vector.endPoint!)
             let needToRemove = pointsDiff(p1:endPoint.y, p2:pointOnGrid.y)
             if horizontalHelp && needToRemove{
-                let resultPoint = CGPoint(x: pointOnGrid.x + halfRAC, y: endPoint.y + halfRAC)
+                let resultPoint = CGPoint(x: pointOnGrid.x + Constants.halfRAC, y: endPoint.y + Constants.halfRAC)
                 vector.changePosition(startPoint: grid!.gridPosition(row: Int(resultPoint.y), col: Int(resultPoint.x)))
                 horizontalHelp = false
                 return true
@@ -239,7 +232,7 @@ class GridScene: SKScene, UIGestureRecognizerDelegate {
             let startPoint = grid!.gridPosition(point: vector.startPoint!)
             let needToRemove = pointsDiff(p1:startPoint.y, p2:pointOnGrid.y)
             if horizontalHelp && needToRemove{
-                let resultPoint = CGPoint(x: pointOnGrid.x + halfRAC, y: startPoint.y + halfRAC)
+                let resultPoint = CGPoint(x: pointOnGrid.x + Constants.halfRAC, y: startPoint.y + Constants.halfRAC)
                 vector.changePosition(endPoint: grid!.gridPosition(row: Int(resultPoint.y), col: Int(resultPoint.x)))
                 horizontalHelp = false
                 return true
@@ -256,7 +249,7 @@ class GridScene: SKScene, UIGestureRecognizerDelegate {
             let endPoint = grid!.gridPosition(point: vector.endPoint!)
             let needToRemove = pointsDiff(p1:endPoint.x ,p2:pointOnGrid.x)
             if verticalHelp && needToRemove{
-                let resultPoint = CGPoint(x: endPoint.x + halfRAC, y: pointOnGrid.y + halfRAC)
+                let resultPoint = CGPoint(x: endPoint.x + Constants.halfRAC, y: pointOnGrid.y + Constants.halfRAC)
                 vector.changePosition(startPoint: grid!.gridPosition(row: Int(resultPoint.y), col: Int(resultPoint.x)))
                 verticalHelp = false
                 return true
@@ -267,7 +260,7 @@ class GridScene: SKScene, UIGestureRecognizerDelegate {
             let startPoint = grid!.gridPosition(point: vector.startPoint!)
             let needToRemove = pointsDiff(p1:startPoint.x , p2:pointOnGrid.x)
             if verticalHelp && needToRemove{
-                let resultPoint = CGPoint(x: startPoint.x + halfRAC, y: pointOnGrid.y + halfRAC)
+                let resultPoint = CGPoint(x: startPoint.x + Constants.halfRAC, y: pointOnGrid.y + Constants.halfRAC)
                 vector.changePosition(endPoint: grid!.gridPosition(row: Int(resultPoint.y), col: Int(resultPoint.x)))
                 verticalHelp = false
                 return true
@@ -358,8 +351,8 @@ extension GridScene: VectorsManagerDelegate{
             let ep = vec?.endPoint
             let color = vec?.fillColor
             
-            let newSP = grid?.gridPosition(row: Int(sp!.y + halfRAC), col: Int(sp!.x + halfRAC))
-            let newEP = grid?.gridPosition(row: Int(ep!.y + halfRAC), col: Int(ep!.x + halfRAC))
+            let newSP = grid?.gridPosition(row: Int(sp!.y + Constants.halfRAC), col: Int(sp!.x + Constants.halfRAC))
+            let newEP = grid?.gridPosition(row: Int(ep!.y + Constants.halfRAC), col: Int(ep!.x + Constants.halfRAC))
             
             let vector = VectorNode(fillColor: color!, startPoint: newSP!, endPoint: newEP!)
             grid!.addChild(vector)
